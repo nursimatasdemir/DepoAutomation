@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Catalog.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<CatalogDbContext>(options => options.UseNpgsql(connectionString));
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
