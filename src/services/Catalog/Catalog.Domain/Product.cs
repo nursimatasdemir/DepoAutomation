@@ -3,7 +3,7 @@ namespace Catalog.Domain;
 public class Product
 {
     public Guid Id { get; set; } //PK
-    public stirng? SKU { get; set; } // @prop SKU short for Stock Keeping Unit
+    public string? Sku { get; set; } // @prop SKU short for Stock Keeping Unit
     public string? Name { get; set; }
     public string? Barcode { get; set; }
     
