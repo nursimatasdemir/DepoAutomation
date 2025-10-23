@@ -8,8 +8,8 @@ services:
     container_name: depo-db
     environment:
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=Pswrd1234
-      - POSTGRES_DB=DepoDb
+      - POSTGRES_PASSWORD=Password123
+      - POSTGRES_DB=DepotDb
     ports:
       - "5432:5432"
     volumes:
