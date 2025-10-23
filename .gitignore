@@ -1,0 +1,21 @@
+#.gitignore
+
+### Ride / JetBrains ###
+.idea/
+
+### macOS ###
+.DS_Store
+
+### .NET Core ###
+**/bin/
+**/obj/
+
+### Node.js ###
+**/node_modules/
+.next/
+npm-debug.log
+yarn-error.log
+
+### Dev ###
+*.Development.json
+*.User.props

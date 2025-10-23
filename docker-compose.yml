@@ -1,0 +1,30 @@
+#docker-compose.yml
+
+
+services:
+  #PostgreSQL (main database)
+  postgres_db:
+    image: postgres:16
+    container_name: depo-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=Pswrd1234
+      - POSTGRES_DB=DepoDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - depo-db-data:/var/lib/postgresql/data
+  redis_cache:
+    image: redis:7
+    container_name: depo-cache
+    ports:
+      - "6379:6379"
+  rabbitmq_bus:
+    image: rabbitmq:3.13-management
+    container_name: depo-bus
+    ports:
+      - "5672:5672" #for .net service 
+      - "15672:15672" #browser tracker
+volumes:
+  depo-db-data:
+    driver: local
