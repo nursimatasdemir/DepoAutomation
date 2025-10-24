@@ -1,3 +1,4 @@
+using Catalog.Application.Features.Products.Commands.CreateProduct;
 using MediatR;
 using Catalog.Application.Features.Products.Queries.GetProducts;
 using Microsoft.AspNetCore.Mvc;
@@ -22,5 +23,12 @@ public class ProductsController : ControllerBase
         
         var products = await _mediator.Send(query);
         return Ok(products);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
+    {
+        var newProductId = await _mediator.Send(command);
+        return Ok(newProductId);
     }
 }
