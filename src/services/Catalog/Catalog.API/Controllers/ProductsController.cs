@@ -1,4 +1,5 @@
 using Catalog.Application.Features.Products.Commands.CreateProduct;
+using Catalog.Application.Features.Products.Commands.UpdateProduct;
 using Catalog.Application.Features.Products.Queries.GetProductById;
 using MediatR;
 using Catalog.Application.Features.Products.Queries.GetProducts;
@@ -42,4 +43,18 @@ public class ProductsController : ControllerBase
         var newProductId = await _mediator.Send(command);
         return Ok(newProductId);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductCommand command)
+    {
+        command.Id = id;
+        
+        var updatedProductDto = await _mediator.Send(command);
+        if (updatedProductDto == null)
+        {
+            return NotFound();
+        }
+        return Ok(updatedProductDto);
+    }
+    
 }
