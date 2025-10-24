@@ -1,10 +1,11 @@
 using System.Net.Mime;
+using Catalog.Application.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Catalog.Domain;
 
 namespace Catalog.Infrastructure;
 
-public class CatalogDbContext : DbContext
+public class CatalogDbContext : DbContext, IApplicationDbContext
 {
     public CatalogDbContext(DbContextOptions<CatalogDbContext> options) : base(options)
     {

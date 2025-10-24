@@ -1,7 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Catalog.Infrastructure;
+using Catalog.Application.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(Catalog.Application.Abstractions.IApplicationDbContext).Assembly));
+
+builder.Services.AddScoped<IApplicationDbContext, CatalogDbContext>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<CatalogDbContext>(options => options.UseNpgsql(connectionString));
