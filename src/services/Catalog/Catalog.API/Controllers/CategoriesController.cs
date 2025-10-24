@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Features.Categories.Commands.CreateCategory;
+using Catalog.Application.Features.Categories.Queries.GetQueries;
 
 namespace Catalog.API.Controllers;
 
@@ -13,6 +14,14 @@ public class CategoriesController : ControllerBase
     public CategoriesController(IMediator mediator)
     {
         _mediator = mediator;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCategories()
+    {
+        var query = new GetCategoriesQuery();
+        var categories = await _mediator.Send(query);
+        return Ok(categories);
     }
 
     [HttpPost]
