@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Features.Categories.Commands.CreateCategory;
 using Catalog.Application.Features.Categories.Queries.GetQueries;
+using Catalog.Application.Features.Categories.Commands.UpdateCategory;
 
 namespace Catalog.API.Controllers;
 
@@ -29,5 +30,18 @@ public class CategoriesController : ControllerBase
     {
         var newCategoryId = await _mediator.Send(command);
         return Ok(newCategoryId);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, [FromBody] UpdateCategoryCommand command)
+    {
+        command.Id = id;
+        
+        var updatedCategoryDto = await _mediator.Send(command);
+        if (updatedCategoryDto == null)
+        {
+            return NotFound();
+        }
+        return Ok(updatedCategoryDto);
     }
 }
