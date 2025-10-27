@@ -1,8 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Features.Categories.Commands.CreateCategory;
+using Catalog.Application.Features.Categories.Commands.DeleteCategory;
 using Catalog.Application.Features.Categories.Queries.GetQueries;
 using Catalog.Application.Features.Categories.Commands.UpdateCategory;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.API.Controllers;
 
@@ -43,5 +45,18 @@ public class CategoriesController : ControllerBase
             return NotFound();
         }
         return Ok(updatedCategoryDto);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCategory([FromRoute] Guid id, [FromBody] DeleteCategoryCommand command)
+    {
+        command.Id = id;
+        
+        var wasdeleted = await _mediator.Send(command);
+        if (!wasdeleted)
+        {
+            return NotFound();
+        }
+        return NoContent();
     }
 }
