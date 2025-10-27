@@ -1,4 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using Inventory.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("Inventory");
+builder.Services.AddDbContext<InventoryDbContext>(options => options.UseNpgsql(connectionString));
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
