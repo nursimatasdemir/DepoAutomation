@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Features.Locations.Commands.CreateLocation;
+using Catalog.Application.Features.Locations.Commands.DeleteLocation;
 using Catalog.Application.Features.Locations.Commands.UpdateLocation;
 using Catalog.Application.Features.Locations.Queries.GetLocations;
 
@@ -41,5 +42,15 @@ public class LocationsController : ControllerBase
         if(updatedLocation == null) return NotFound();
         
         return Ok(updatedLocation);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteLocation([FromRoute] Guid id, [FromBody] DeleteLocationCommand command)
+    {
+        command.Id = id;
+        
+        var wasDeleted = await _mediator.Send(command);
+        if(!wasDeleted) return NotFound();
+        return NoContent();
     }
 }
