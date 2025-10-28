@@ -1,5 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Inventory.Application.Features.StockTransactions.Queries.GetStockLevel;
+using Inventory.Application.DTOs;
 
 using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
 
@@ -21,5 +23,14 @@ public class InventoryController : ControllerBase
     {
         var transactionId = await _mediator.Send(command);
         return Ok(transactionId);
+    }
+
+    [HttpGet("stock/{productId}")]
+    public async Task<IActionResult> GetStockLevel([FromRoute] Guid productId)
+    {
+        var query = new GetStockLevelQuery { ProductId = productId };
+        var stockLevel = await _mediator.Send(query);
+        
+        return Ok(stockLevel);
     }
 }
