@@ -6,25 +6,12 @@ using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 var redisConnectionString = builder.Configuration.GetValue<string>("Redis:ConnectionString");
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp => {
-        // Let's add a log here to see if it even runs
-        Console.WriteLine("--> Attempting to connect to Redis...");
-        try 
-        {
-            var connection = ConnectionMultiplexer.Connect(redisConnectionString);
-            Console.WriteLine("--> Redis Connection SUCCESSFUL.");
-            return connection; 
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"--> Redis Connection FAILED: {ex.Message}");
-            throw; // Re-throw the exception so AddSingleton fails clearly
-        }
-    }
-    );
-
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+    return redis;
+});
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ReceiveStockCommand).Assembly));
 

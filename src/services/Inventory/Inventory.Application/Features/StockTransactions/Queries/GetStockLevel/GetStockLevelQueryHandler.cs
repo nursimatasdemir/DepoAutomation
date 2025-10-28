@@ -4,8 +4,6 @@ using StackExchange.Redis;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
-
 namespace Inventory.Application.Features.StockTransactions.Queries.GetStockLevel;
 
 public class GetStockLevelQueryHandler : IRequestHandler<GetStockLevelQuery, StockLevelDTO>
