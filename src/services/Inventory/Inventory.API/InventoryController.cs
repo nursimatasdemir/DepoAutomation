@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Inventory.Application.Features.StockTransactions.Queries.GetStockLevel;
 using Inventory.Application.DTOs;
+using Inventory.Application.Features.StockTransactions.Commands.PickStock;
 using Inventory.Application.Features.StockTransactions.Commands.TransferStock;
 
 using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
@@ -32,7 +33,19 @@ public class InventoryController : ControllerBase
         var wasSuccessful = await _mediator.Send(command);
         if (!wasSuccessful)
         {
-            return BadRequest("İşlem başarısız kaynak lokasyonda yeteri kasar stok olmayabilir");
+            return BadRequest("İşlem başarısız kaynak lokasyonda yeteri kadar stok olmayabilir");
+        }
+
+        return NoContent();
+    }
+
+    [HttpPost("pick")]
+    public async Task<IActionResult> PickStock([FromBody] PickStockCommand command)
+    {
+        var wasSuccessful = await _mediator.Send(command);
+        if (!wasSuccessful)
+        {
+            return BadRequest("İşlem başarısız kaynak lokasyonda yeteri kadar stok olmayabilir");
         }
 
         return NoContent();
