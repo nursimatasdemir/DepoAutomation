@@ -3,6 +3,7 @@ using Inventory.Infrastructure;
 using Inventory.Application.Abstraction;
 using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
 using StackExchange.Redis;
+using Inventory.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ builder.Services.AddDbContext<InventoryDbContext>(options => options.UseNpgsql(c
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHostedService<StockCacheWarmer>();
 
 var app = builder.Build();
 
