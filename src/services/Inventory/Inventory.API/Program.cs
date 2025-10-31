@@ -1,3 +1,4 @@
+using Catalog.API.Services;
 using Microsoft.EntityFrameworkCore;
 using Inventory.Infrastructure;
 using Inventory.Application.Abstraction;
@@ -23,7 +24,7 @@ builder.Services.AddDbContext<InventoryDbContext>(options => options.UseNpgsql(c
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidationValidators();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<StockCacheWarmer>();
