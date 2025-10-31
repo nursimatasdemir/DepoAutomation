@@ -16,6 +16,11 @@ public class DeleteLocationCommandHandler : IRequestHandler<DeleteLocationComman
 
     public async Task<bool> Handle(DeleteLocationCommand request, CancellationToken cancellationToken)
     {
+        var locationExists = await _context.Locations.AnyAsync(x => x.Id == request.Id);
+        if (!locationExists)
+        {
+            throw new FluentValidation.ValidationException("Belirtilen Id ile kayıtlı lokasyon bulunamadı.");
+        }
         var locationToDelete = await _context.Locations.FindAsync(request.Id);
         if (locationToDelete == null)
         {

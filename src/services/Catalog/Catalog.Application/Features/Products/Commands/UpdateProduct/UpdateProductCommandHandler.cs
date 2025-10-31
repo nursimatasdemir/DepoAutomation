@@ -16,6 +16,17 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
     public async Task<ProductDTO?> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
+        var productExist = await _context.Products.AnyAsync(c => c.Id == request.Id, cancellationToken);
+        if (!productExist)
+        {
+            throw new FluentValidation.ValidationException("Belirtilen Ürün ID ile eşleşen ürün bulunamadı.");
+        }
+        var categoryExist = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId, cancellationToken);
+        if (!categoryExist)
+        {
+            throw new FluentValidation.ValidationException("Belirtilen Kategori ID ile eşleşen kategori bulunamadı.");
+        }
+        
         var productToUpdate = await _context.Products
             .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);

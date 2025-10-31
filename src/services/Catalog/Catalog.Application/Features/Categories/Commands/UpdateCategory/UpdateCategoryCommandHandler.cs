@@ -17,6 +17,18 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 
     public async Task<CategoryDTO?> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
+        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.Id, cancellationToken);
+        if (!categoryExists)
+        {
+            throw new FluentValidation.ValidationException("Verilen Id ile kayıtlı kategori bulunamadı.");
+        }
+        var nameExists = await _context.Categories.AnyAsync(c => c.Name == request.Name, cancellationToken);
+        if (nameExists)
+        {
+            throw new FluentValidation.ValidationException("Mevcut olan adlardan birini kullanamazsınız.");
+        }
+        
+        
         var categoryToUpdate = await _context.Categories
             .Include(c => c.Products)
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);

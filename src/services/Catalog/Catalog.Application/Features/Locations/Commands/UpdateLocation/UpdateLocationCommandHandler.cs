@@ -16,6 +16,11 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
 
     public async Task<LocationDTO?> Handle(UpdateLocationCommand request, CancellationToken cancellationToken)
     {
+        var locationExists = await _context.Locations.AnyAsync(c => c.Id == request.Id, cancellationToken);
+        if (!locationExists)
+        {
+            throw new FluentValidation.ValidationException("Belirtilen Id ile kayıtlı lokasyon bilgisi bulunamadı.");
+        }
         var locationToUpdate = await _context.Locations
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
 
