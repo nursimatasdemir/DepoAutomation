@@ -1,6 +1,6 @@
-using Catalog.Application.Features.Categories.Commands.CreateCategory.Validation;
-using Catalog.Application.Features.Products.Commands.CreateProduct.Validation;
 using FluentValidation.AspNetCore;
+using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock.Validation;
+
 namespace Catalog.API.Services;
 
 public static class ValidatorRegistrationService
@@ -9,7 +9,7 @@ public static class ValidatorRegistrationService
     {
         return builder.AddFluentValidation(fv =>
         {
-            fv.RegisterValidatorsFromAssemblyContaining<CreateProductCommandValidator>();
+            fv.RegisterValidatorsFromAssemblyContaining<ReceiveStockCommandValidator>();
         });
     }
 }
