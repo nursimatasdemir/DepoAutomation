@@ -1,5 +1,6 @@
 using Catalog.Application.Abstractions;
 using Catalog.Domain;
+
 using MediatR;
 
 namespace Catalog.Application.Features.Products.Commands.CreateProduct;

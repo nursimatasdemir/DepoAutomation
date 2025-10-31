@@ -4,6 +4,7 @@ using Catalog.Application.Features.Categories.Commands.CreateCategory;
 using Catalog.Application.Features.Categories.Commands.DeleteCategory;
 using Catalog.Application.Features.Categories.Queries.GetQueries;
 using Catalog.Application.Features.Categories.Commands.UpdateCategory;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.API.Controllers;

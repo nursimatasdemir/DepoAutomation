@@ -7,6 +7,6 @@ public class Product
     public string? Name { get; set; }
     public string? Barcode { get; set; }
     
-    public Guid CategoryId { get; set; } //FK 
+    public Guid? CategoryId { get; set; } //FK 
     public Category? Category { get; set; }
 }

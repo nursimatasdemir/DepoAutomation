@@ -1,7 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Catalog.Infrastructure;
 using Catalog.Application.Abstractions;
 using Catalog.API.Controllers;
+using Catalog.API.Services;
+using Catalog.Application.Features.Products.Commands.CreateProduct;
+using Catalog.Application.Features.Products.Commands.CreateProduct.Validation;
+using FluentValidation;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +21,10 @@ builder.Services.AddDbContext<CatalogDbContext>(options => options.UseNpgsql(con
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidationValidators();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 var app = builder.Build();
 
