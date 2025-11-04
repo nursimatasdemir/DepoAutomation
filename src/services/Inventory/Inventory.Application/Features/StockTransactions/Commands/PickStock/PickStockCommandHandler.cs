@@ -1,7 +1,9 @@
 using System.Data.Common;
+using FluentValidation;
 using Inventory.Application.Abstraction;
 using Inventory.Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
 
@@ -20,6 +22,24 @@ public class PickStockCommandHandler : IRequestHandler<PickStockCommand, bool>
 
     public async Task<bool> Handle(PickStockCommand request, CancellationToken cancellationToken)
     {
+        var productExists = await _context.ProductViews
+            .AnyAsync(p => p.Id == request.ProductId, cancellationToken);
+        if (!productExists)
+        {
+            throw new ValidationException(
+                $"{request.ProductId} numaralı Id'e sahip kayıtlı ürün bulunamadı!.");
+        }
+        
+        var sourceLocationExists = await _context.LocationViews
+            .AnyAsync(l=>l.Id == request.SourceLocationId, cancellationToken);
+
+        if (!sourceLocationExists)
+        {
+            throw new ValidationException(
+                $"{request.SourceLocationId} numaralı Id'e sahip kayıtlı kaynak lokasyon bilgisi bulunamadı!.");
+        }
+        
+        
         var redisDb = _redis.GetDatabase();
         string sourceKey = $"stock:{request.ProductId}:{request.SourceLocationId}";
         

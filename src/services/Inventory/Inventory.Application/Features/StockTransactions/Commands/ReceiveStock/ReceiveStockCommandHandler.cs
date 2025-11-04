@@ -2,6 +2,8 @@ using Inventory.Application.Abstraction;
 using Inventory.Domain;
 using MediatR;
 using System;
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
 namespace Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
@@ -19,6 +21,23 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, G
 
     public async Task<Guid> Handle(ReceiveStockCommand request, CancellationToken cancellationToken)
     {
+        var productExists = await _context.ProductViews
+            .AnyAsync(p => p.Id == request.ProductId, cancellationToken);
+
+        if (!productExists)
+        {
+            throw new ValidationException($"{request.ProductId} numaralı Id'e sahip kayıtlı ürün bulunamadı!");
+        }
+        
+        var locationExists = await _context.LocationViews
+            .AnyAsync(p => p.Id == request.LocationId, cancellationToken);
+
+        if (!locationExists)
+        {
+            throw new ValidationException(
+                $"{request.LocationId} numaralı Id'e sahip kayıtlı lokasyon bilgisi bulunamadı!.");
+        }
+        
         var transaction = new StockTransaction
         {
             Id = Guid.NewGuid(),

@@ -3,6 +3,7 @@ using Inventory.Domain;
 using MediatR;
 using StackExchange.Redis;
 using System;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Application.Features.StockTransactions.Commands.TransferStock;
@@ -35,6 +36,32 @@ public class TransferStockCommandHandler : IRequestHandler<TransferStockCommand,
 
         try
         {
+            var productExists = await _context.ProductViews
+                .AnyAsync(p=>p.Id == request.ProductId,cancellationToken);
+
+            if (!productExists)
+            {
+                throw new Exception($"{request.ProductId} numaralı Id'e sahip kayıtlı ürün bulunamadı!");
+            }
+            
+            var sourceLocationExists = await _context.LocationViews
+                .AnyAsync(l => l.Id == request.SourceLocationId,cancellationToken);
+            var destinationLocationExists = await _context.LocationViews
+                .AnyAsync(l => l.Id == request.DestinationLocationId,cancellationToken);
+
+            if (!sourceLocationExists)
+            {
+                throw new ValidationException(
+                    $"{request.SourceLocationId} numaralı Id'e sahip kayıtlı kaynak lokasyon bilgisi bulunamadı!.");
+            }
+
+            if (!destinationLocationExists)
+            {
+                throw new ValidationException(
+                    $"{request.DestinationLocationId} numaralı Id'e sahip kayıtlı hedef lokasyon bilgisi bulunamadı!.");
+            }
+            
+            
             var transactionTimeStamp = DateTime.UtcNow;
 
             var transactionOut = new StockTransaction

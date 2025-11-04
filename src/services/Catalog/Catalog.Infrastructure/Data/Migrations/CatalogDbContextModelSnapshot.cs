@@ -62,7 +62,7 @@ namespace Catalog.Infrastructure.Data.Migrations
                     b.Property<string>("Barcode")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Name")
@@ -82,9 +82,7 @@ namespace Catalog.Infrastructure.Data.Migrations
                 {
                     b.HasOne("Catalog.Domain.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
