@@ -49,6 +49,25 @@ public class StockCacheWarmer : IHostedService
                 }
                 
                 _logger.LogInformation("Successfully warmed up Redis cache from PostgreSQL.");
+                
+                var validProductIds = await dbContext.ProductViews
+                    .AsNoTracking()
+                    .Select(p => p.Id.ToString())
+                    .ToArrayAsync(cancellationToken);
+                
+                _logger.LogInformation($"Found {validProductIds.Length} product views from PostgreSQL.");
+
+                if (validProductIds.Length > 0)
+                {
+                    string validProductsKey = "valid_products";
+                    await redisDb.KeyDeleteAsync(validProductsKey);
+
+                    var redisValues = validProductIds.Select(id => (RedisValue)id).ToArray();
+                    await redisDb.SetAddAsync(validProductsKey, redisValues);
+                    
+                    _logger.LogInformation("Valid Product Ids warming completed.");
+                }
+                _logger.LogInformation("Successfully warmed up Redis cache from Redis");
 
             }
             catch (Exception ex)
