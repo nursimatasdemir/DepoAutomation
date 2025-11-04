@@ -7,6 +7,7 @@ using Catalog.API.Services;
 using Catalog.Application.Features.Products.Commands.CreateProduct;
 using Catalog.Application.Features.Products.Commands.CreateProduct.Validation;
 using FluentValidation;
+using Catalog.API.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,9 +25,13 @@ builder.Services.AddDbContext<CatalogDbContext>(options => options.UseNpgsql(con
 builder.Services.AddControllers().AddFluentValidationValidators();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
