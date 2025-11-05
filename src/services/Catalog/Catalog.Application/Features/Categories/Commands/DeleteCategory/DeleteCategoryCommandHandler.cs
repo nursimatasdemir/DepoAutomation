@@ -16,20 +16,15 @@ public class DeleteCategoryCommandHandler :IRequestHandler<DeleteCategoryCommand
 
     public async Task<bool> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.Id, cancellationToken);
-        if (!categoryExists)
-        {
-            throw new FluentValidation.ValidationException( new []
-            {
-                new ValidationFailure("CategoryId,", $"Veriled Id numarasına ait kategori bulunamadı.")
-            });
-        }
-        
-        var categoryToDelete = await _context.Categories
-            .FindAsync(request.Id);
+        var categoryToDelete = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+
         if (categoryToDelete == null)
         {
-            return false;
+            throw new FluentValidation.ValidationException(new[]
+            {
+                new ValidationFailure("Category",
+                    $"Verilen {request.Id} Id numaralı kategori kayıtına ulaşılamadı. Id numarasını veya kategorinin varlığını kontrol edin.")
+            });
         }
 
         _context.Categories.Remove(categoryToDelete);

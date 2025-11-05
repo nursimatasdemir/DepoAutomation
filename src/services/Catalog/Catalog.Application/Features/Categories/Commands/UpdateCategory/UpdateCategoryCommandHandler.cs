@@ -19,15 +19,14 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
 
     public async Task<CategoryDTO?> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.Id, cancellationToken);
-        if (!categoryExists)
-        {
-            throw new FluentValidation.ValidationException("Verilen Id ile kayıtlı kategori bulunamadı.");
-        }
+        
         var nameExists = await _context.Categories.AnyAsync(c => c.Name == request.Name, cancellationToken);
         if (nameExists)
         {
-            throw new FluentValidation.ValidationException("Mevcut olan adlardan birini kullanamazsınız.");
+            throw new FluentValidation.ValidationException(new []
+            {
+                new ValidationFailure("Name", $"Verilen kategori adı {request.Name} kayıtlı başka bir kategoriye ait.")
+            });
         }
         
         
@@ -38,9 +37,11 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         {
             throw new ValidationException(new[]
             {
-                new ValidationFailure("CategoryId", $"{request.Id} numarası ile kayıtlı kategori bulunamadı.")
+                new ValidationFailure("Category",
+                    $"Verilen {request.Id} numaralı lokasyon kayıtına ulaşılamadı veya boş. Id numarasını veya kategori bilgisinin varlığını kontrol edin.")
             });
         }
+        
         
         categoryToUpdate.Name = request.Name;
         await _context.SaveChangesAsync(cancellationToken);

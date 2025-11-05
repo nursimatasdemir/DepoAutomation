@@ -1,6 +1,7 @@
 using Catalog.Application.DTOs;
 using Catalog.Application.Abstractions;
 using Catalog.Domain;
+using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,22 +18,14 @@ public class UpdateLocationCommandHandler : IRequestHandler<UpdateLocationComman
 
     public async Task<LocationDTO?> Handle(UpdateLocationCommand request, CancellationToken cancellationToken)
     {
-        var locationExists = await _context.Locations.AnyAsync(c => c.Id == request.Id, cancellationToken);
-        if (!locationExists)
-        {
-            throw new FluentValidation.ValidationException(new []
-            {
-                new ValidationFailure("Location", $"Verilen {request.Id} numaralı lokasyon kayıtına ulaşılamadı.")
-            });
-        }
-        var locationToUpdate = await _context.Locations
-            .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
+        var locationToUpdate = await _context.Locations.FirstOrDefaultAsync(l => l.Id == request.Id, cancellationToken);
 
         if (locationToUpdate == null)
         {
-            throw new FluentValidation.ValidationException(new []
+            throw new ValidationException(new[]
             {
-                new ValidationFailure("LocationToUpdate", $"Verilen {request.Id} numaralı lokasyon kayıtı boş olamaz.")
+                new ValidationFailure("Location",
+                    $"Verilen {request.Id} numaralı lokasyon kayıtına ulaşılamadı. Id numarasını veya lokasyon bilgisinin varlığını kontrol edin.")
             });
         }
         
