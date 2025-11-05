@@ -1,4 +1,5 @@
 using Catalog.Application.Abstractions;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,7 +19,10 @@ public class DeleteCategoryCommandHandler :IRequestHandler<DeleteCategoryCommand
         var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.Id, cancellationToken);
         if (!categoryExists)
         {
-            throw new FluentValidation.ValidationException("Verilen Id ile kayıtlı Kategori bulunamadı.");
+            throw new FluentValidation.ValidationException( new []
+            {
+                new ValidationFailure("CategoryId,", $"Veriled Id numarasına ait kategori bulunamadı.")
+            });
         }
         
         var categoryToDelete = await _context.Categories

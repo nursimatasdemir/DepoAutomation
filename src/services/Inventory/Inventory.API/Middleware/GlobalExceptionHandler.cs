@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Catalog.API.Middleware;
+namespace Inventory.API.Middleware;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
@@ -28,7 +28,6 @@ public class GlobalExceptionHandler : IExceptionHandler
                     (propertyName, errorMessages) => new
                     {
                         Key = propertyName, Values = errorMessages.ToArray()
-
                     })
                 .ToDictionary(
                     x => x.Key,

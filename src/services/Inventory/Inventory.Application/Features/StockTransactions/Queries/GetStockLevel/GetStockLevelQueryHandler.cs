@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace Inventory.Application.Features.StockTransactions.Queries.GetStockLevel;
 
@@ -20,15 +21,20 @@ public class GetStockLevelQueryHandler : IRequestHandler<GetStockLevelQuery, Sto
     public async Task<StockLevelDTO> Handle(GetStockLevelQuery request, CancellationToken cancellationToken)
     {
         var redisDb = _redis.GetDatabase();
+        var productId = request.ProductId;
 
         var productExists = await redisDb.SetContainsAsync("valid_products", request.ProductId.ToString());
+        
 
         if (!productExists)
         {
-            throw new ValidationException($"ProductId: {request.ProductId} geçerli bir ürün Id değil!");
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("productId", $"ProductId (...) geçerli bir ürün Id numarası değil.")
+            });
         }
         decimal totalQuantity = 0;
-
+            
         var server = _redis.GetServer("localhost", 6379);
 
         var pattern = $"stock:{request.ProductId}:*";

@@ -1,6 +1,8 @@
 using Catalog.Application.Abstractions;
 using Catalog.Application.DTOs;
 using Catalog.Domain;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +36,10 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             .FirstOrDefaultAsync(c => c.Id == request.Id, cancellationToken);
         if (categoryToUpdate == null)
         {
-            return null;
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("CategoryId", $"{request.Id} numarası ile kayıtlı kategori bulunamadı.")
+            });
         }
         
         categoryToUpdate.Name = request.Name;

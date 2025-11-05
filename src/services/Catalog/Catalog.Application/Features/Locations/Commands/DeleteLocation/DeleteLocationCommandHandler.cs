@@ -1,5 +1,6 @@
 using Catalog.Application.Abstractions;
 using Catalog.Application.DTOs;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,12 +20,19 @@ public class DeleteLocationCommandHandler : IRequestHandler<DeleteLocationComman
         var locationExists = await _context.Locations.AnyAsync(x => x.Id == request.Id);
         if (!locationExists)
         {
-            throw new FluentValidation.ValidationException("Belirtilen Id ile kayıtlı lokasyon bulunamadı.");
+            throw new FluentValidation.ValidationException(new []
+            {
+                new ValidationFailure("Location", $"Verilen {request.Id} numaralı lokasyon kayıtına ulaşılamadı.")
+            });
         }
         var locationToDelete = await _context.Locations.FindAsync(request.Id);
         if (locationToDelete == null)
         {
-            return false;
+            throw new FluentValidation.ValidationException(new[]
+            {
+                new ValidationFailure("LocationId",
+                    $"Verilen {request.Id} numaralı Id ile kayıtlı lokasyon bulunmamadı")
+            });
         }
         _context.Locations.Remove(locationToDelete);
         await _context.SaveChangesAsync(cancellationToken);

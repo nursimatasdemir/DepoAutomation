@@ -3,6 +3,7 @@ using Inventory.Domain;
 using MediatR;
 using System;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -26,7 +27,10 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, G
 
         if (!productExists)
         {
-            throw new ValidationException($"{request.ProductId} numaralı Id'e sahip kayıtlı ürün bulunamadı!");
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("ProductId", $"(...) geçerli bir ürün Id numarası değil.")
+            });
         }
         
         var locationExists = await _context.LocationViews
@@ -34,8 +38,11 @@ public class ReceiveStockCommandHandler : IRequestHandler<ReceiveStockCommand, G
 
         if (!locationExists)
         {
-            throw new ValidationException(
-                $"{request.LocationId} numaralı Id'e sahip kayıtlı lokasyon bilgisi bulunamadı!.");
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("LocationId",
+                    $"(...) geçerli bir lokasyona ait Id numarası değil.")
+            });
         }
         
         var transaction = new StockTransaction

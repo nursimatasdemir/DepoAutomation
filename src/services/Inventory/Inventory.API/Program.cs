@@ -1,4 +1,5 @@
 using Catalog.API.Services;
+using Inventory.API.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Inventory.Infrastructure;
 using Inventory.Application.Abstraction;
@@ -28,8 +29,12 @@ builder.Services.AddControllers().AddFluentValidationValidators();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHostedService<StockCacheWarmer>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

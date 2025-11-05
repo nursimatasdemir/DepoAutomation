@@ -1,5 +1,6 @@
 using Catalog.Application.Abstractions;
 using Catalog.Domain;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,12 +20,19 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
         var locationCodeExists = await _context.Locations.AnyAsync(x => x.Code == request.Code, cancellationToken);
         if (locationCodeExists)
         {
-            throw new FluentValidation.ValidationException("Belirtilen lokasyon kodu mevcut.");
+            throw new FluentValidation.ValidationException(new []
+            {
+                new ValidationFailure("LocationCode", $"Verilen lokasyona ait ID numarası : {request.Code} kullanılmakta.")
+            });
         }
         var locationTypeExists = await _context.Locations.AnyAsync(c => c.Type == request.Type, cancellationToken);
         if (locationTypeExists)
         {
-            throw new FluentValidation.ValidationException("Belirtilen lokasyon mevcut.");
+            throw new FluentValidation.ValidationException(new[]
+            {
+                new ValidationFailure("LocationTypeExists",
+                    $"Verilen lokasyon türüne it ID numarası : {request.Code} kullanılmakta.")
+            });
         }
         
         var newLocation = new Location

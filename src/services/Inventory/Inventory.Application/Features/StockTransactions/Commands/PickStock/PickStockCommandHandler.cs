@@ -1,5 +1,6 @@
 using System.Data.Common;
 using FluentValidation;
+using FluentValidation.Results;
 using Inventory.Application.Abstraction;
 using Inventory.Domain;
 using MediatR;
@@ -26,8 +27,10 @@ public class PickStockCommandHandler : IRequestHandler<PickStockCommand, bool>
             .AnyAsync(p => p.Id == request.ProductId, cancellationToken);
         if (!productExists)
         {
-            throw new ValidationException(
-                $"{request.ProductId} numaralı Id'e sahip kayıtlı ürün bulunamadı!.");
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("ProductId", $"(...) geçerli bir ürün Id numarası değil.")
+            });
         }
         
         var sourceLocationExists = await _context.LocationViews
@@ -35,8 +38,11 @@ public class PickStockCommandHandler : IRequestHandler<PickStockCommand, bool>
 
         if (!sourceLocationExists)
         {
-            throw new ValidationException(
-                $"{request.SourceLocationId} numaralı Id'e sahip kayıtlı kaynak lokasyon bilgisi bulunamadı!.");
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("SourceLocationId",
+                    $"(...) geçerli bir kaynak lokasyona ait Id numarası değil.")
+            });
         }
         
         
