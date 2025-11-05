@@ -32,7 +32,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         {
             throw new FluentValidation.ValidationException(new[]
             {
-                new ValidationFailure("SKU",$"Bu SKU {request.Sku} zaten başka bir ürün tarafından kullanılıyor")
+                new ValidationFailure("SKU",$"Stok kodu {request.Sku} zaten başka bir ürün tarafından kullanılıyor")
             });
 
         }
@@ -41,7 +41,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         {
             throw new FluentValidation.ValidationException(new[]
             {
-                new ValidationFailure("Barcode", $"Bu Barkod Numarası : {request.Barcode} zaten başka bir ürün tarafından kullanılıyor")
+                new ValidationFailure("Barcode", $"Barkod Numarası : {request.Barcode} başka bir ürünü temsil etmektedir")
             });
 
         }

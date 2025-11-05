@@ -23,7 +23,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         var categoryExists = await _context.Categories
             .AnyAsync(c => c.Name.ToLower() == request.Name.ToLower(), cancellationToken);
         
-        if (!categoryExists)
+        if (categoryExists)
         {
             throw new ValidationException(new[]
             {

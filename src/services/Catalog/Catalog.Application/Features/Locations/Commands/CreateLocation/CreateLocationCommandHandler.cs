@@ -22,7 +22,7 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
         {
             throw new FluentValidation.ValidationException(new []
             {
-                new ValidationFailure("LocationCode", $"Verilen lokasyona ait ID numarası : {request.Code} kullanılmakta.")
+                new ValidationFailure("LocationCode", $"Verilen lokasyona ait kod : {request.Code} kullanılmakta.")
             });
         }
         var locationTypeExists = await _context.Locations.AnyAsync(c => c.Type == request.Type, cancellationToken);
@@ -31,7 +31,7 @@ public class CreateLocationCommandHandler : IRequestHandler<CreateLocationComman
             throw new FluentValidation.ValidationException(new[]
             {
                 new ValidationFailure("LocationTypeExists",
-                    $"Verilen lokasyon türüne it ID numarası : {request.Code} kullanılmakta.")
+                    $"Verilen lokasyon türüne it lokasyon : {request.Code} kullanılmakta.")
             });
         }
         
