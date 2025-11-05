@@ -1,6 +1,7 @@
 using Catalog.Application.Abstractions;
 using Catalog.Domain;
-
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,21 +21,29 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         var categoryExist = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId, cancellationToken);
         if (!categoryExist)
         {
-            throw new FluentValidation.ValidationException("Belirtilen Kategori ID ile eşleşen kategori bulunamadı.");
+            throw new ValidationException(new[]
+            {
+                new ValidationFailure("Category", $"Verilen {request.CategoryId} ile kayıtlı Kategori ID numarası bulunamadı")
+            });
         }
         
         var skuExists = await _context.Products.AnyAsync(c=> c.Sku == request.Sku, cancellationToken);
         if (skuExists)
         {
-            throw new FluentValidation.ValidationException(
-                $"Bu SKU {request.Sku} zaten başka bir ürün tarafından kullanılıyor");
+            throw new FluentValidation.ValidationException(new[]
+            {
+                new ValidationFailure("SKU",$"Bu SKU {request.Sku} zaten başka bir ürün tarafından kullanılıyor")
+            });
+
         }
         var barcodeExists = await _context.Products.AnyAsync(c=> c.Barcode == request.Barcode, cancellationToken);
         if (barcodeExists)
         {
-            throw new FluentValidation.ValidationException(
-                $"Bu Barkod Numarası : {request.Barcode} zaten başka bir ürün tarafından kullanılıyor");
-            
+            throw new FluentValidation.ValidationException(new[]
+            {
+                new ValidationFailure("Barcode", $"Bu Barkod Numarası : {request.Barcode} zaten başka bir ürün tarafından kullanılıyor")
+            });
+
         }
         var newProduct = new Product
         {

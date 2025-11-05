@@ -1,5 +1,6 @@
 using Catalog.Application.Abstractions;
 using Catalog.Application.DTOs;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,30 +17,26 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
     public async Task<ProductDTO?> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var productExist = await _context.Products.AnyAsync(c => c.Id == request.Id, cancellationToken);
-        if (!productExist)
-        {
-            throw new FluentValidation.ValidationException("Belirtilen Ürün ID ile eşleşen ürün bulunamadı.");
-        }
-        var categoryExist = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId, cancellationToken);
-        if (!categoryExist)
-        {
-            throw new FluentValidation.ValidationException("Belirtilen Kategori ID ile eşleşen kategori bulunamadı.");
-        }
-        
         var productToUpdate = await _context.Products
             .Include(p => p.Category)
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         if (productToUpdate == null)
         {
-            return null;
+            throw new FluentValidation.ValidationException(new[]
+            {
+                new ValidationFailure("Product","Belirtilen Ürün ID ile eşleşen ürün bulunamadı.")
+            });
         }
         
-        var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId, cancellationToken);
-        if (!categoryExists)
+        var categoryExist = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.CategoryId, cancellationToken);
+        if (categoryExist == null)
         {
-           
+            throw new FluentValidation.ValidationException(new []
+            {
+                new ValidationFailure("Category","Belirtilen Kategori ID ile eşleşen kategori bulunamadı.")
+            });
         }
+        
         
         productToUpdate.Sku = request.Sku;
         productToUpdate.Name = request.Name;
