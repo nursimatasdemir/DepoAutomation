@@ -7,7 +7,6 @@ using FluentValidation;
 using FluentValidation.Results;
 
 namespace Identity.Application.Features.Auth.Commands.Register;
-
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, bool>
 {
     private readonly UserManager<AppUser> _userManager;
@@ -31,7 +30,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, bool>
         }
         
         var roleExists = await _roleManager.FindByNameAsync(request.Role);
-        if (roleExists != null)
+        if (roleExists == null)
         {
             throw new ValidationException(new[]
             {

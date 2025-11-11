@@ -28,7 +28,7 @@ public class IdentityDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, 
             new IdentityRole<Guid>
             {
                 Id = OPERATOR_ROLE_ID,
-                Name = "Operatör",
+                Name = "Operator",
                 NormalizedName = "OPERATOR"
             }
         );
