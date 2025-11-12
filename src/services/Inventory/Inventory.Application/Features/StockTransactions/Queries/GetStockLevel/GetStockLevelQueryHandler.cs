@@ -26,7 +26,7 @@ public class GetStockLevelQueryHandler : IRequestHandler<GetStockLevelQuery, Sto
         var productExists = await redisDb.SetContainsAsync("valid_products", request.ProductId.ToString());
         
 
-        if (!productExists)
+        if (productExists)
         {
             throw new ValidationException(new[]
             {
