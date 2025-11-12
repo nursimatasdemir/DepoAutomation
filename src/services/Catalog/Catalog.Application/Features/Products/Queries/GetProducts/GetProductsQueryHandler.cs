@@ -18,6 +18,7 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<Pr
     {
         var products = await _context.Products
             .Include(p => p.Category)
+            .Where(p=>p.IsActive == true)
             .Select(p => new ProductDTO
             {
                 Id = p.Id,

@@ -9,4 +9,6 @@ public class Product
     
     public Guid? CategoryId { get; set; } //FK 
     public Category? Category { get; set; }
+
+    public bool IsActive { get; set; } = true;
 }

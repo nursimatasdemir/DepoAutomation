@@ -39,8 +39,6 @@ public class GetStockLevelQueryHandler : IRequestHandler<GetStockLevelQuery, Sto
 
         var pattern = $"stock:{request.ProductId}:*";
         
-        
-        
         var keys = server.Keys(pattern: pattern);
 
         foreach (var key in keys)

@@ -1,4 +1,5 @@
 using Catalog.Application.Features.Products.Commands.CreateProduct;
+using Catalog.Application.Features.Products.Commands.DeleteProduct;
 using Catalog.Application.Features.Products.Commands.UpdateProduct;
 using Catalog.Application.Features.Products.Queries.GetProductById;
 using MediatR;
@@ -61,6 +62,22 @@ public class ProductsController : ControllerBase
             return NotFound();
         }
         return Ok(updatedProductDto);
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteProduct([FromRoute] Guid id)
+    {
+        var command = new DeleteProductCommand { Id = id };
+        
+        var wasSuccessful = await _mediator.Send(command);
+
+        if (!wasSuccessful)
+        {
+            return NotFound("Silmek istediğiniz ürün bulunamadı!");
+        }
+
+        return NoContent();
     }
     
 }
