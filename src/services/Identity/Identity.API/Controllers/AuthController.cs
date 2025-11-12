@@ -1,6 +1,7 @@
 using Identity.Application.Features.Auth.Commands.Login;
 using Identity.Application.Features.Auth.Commands.Register;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers;
@@ -18,6 +19,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Register([FromBody] RegisterCommand registerCommand)
     {
         var wasSuccessful = await _mediator.Send(registerCommand);
@@ -31,6 +33,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginCommand loginCommand)
     {
         var tokenString = await _mediator.Send(loginCommand);

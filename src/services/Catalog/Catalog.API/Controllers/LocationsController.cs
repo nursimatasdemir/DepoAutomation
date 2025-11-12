@@ -4,11 +4,13 @@ using Catalog.Application.Features.Locations.Commands.CreateLocation;
 using Catalog.Application.Features.Locations.Commands.DeleteLocation;
 using Catalog.Application.Features.Locations.Commands.UpdateLocation;
 using Catalog.Application.Features.Locations.Queries.GetLocations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Catalog.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class LocationsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,6 +21,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> GetLocations()
     {
         var query = new GetLocationsQuery();
@@ -27,6 +30,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateLocation([FromBody] CreateLocationCommand command)
     {
         var newLocationId = await _mediator.Send(command);
@@ -34,6 +38,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateLocation([FromRoute] Guid id, [FromBody] UpdateLocationCommand command)
     {
         command.Id = id;
@@ -45,6 +50,7 @@ public class LocationsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteLocation([FromRoute] Guid id, [FromBody] DeleteLocationCommand command)
     {
         command.Id = id;

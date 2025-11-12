@@ -6,11 +6,13 @@ using Inventory.Application.Features.StockTransactions.Commands.PickStock;
 using Inventory.Application.Features.StockTransactions.Commands.TransferStock;
 
 using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Inventory.API;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class InventoryController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -21,6 +23,7 @@ public class InventoryController : ControllerBase
     }
 
     [HttpPost("receive")]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> ReceiveStock([FromBody] ReceiveStockCommand command)
     {
         var transactionId = await _mediator.Send(command);
@@ -28,6 +31,7 @@ public class InventoryController : ControllerBase
     }
 
     [HttpPost("transfer")]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> TransferStock([FromBody] TransferStockCommand command)
     {
         var wasSuccessful = await _mediator.Send(command);
@@ -40,6 +44,7 @@ public class InventoryController : ControllerBase
     }
 
     [HttpPost("pick")]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> PickStock([FromBody] PickStockCommand command)
     {
         var wasSuccessful = await _mediator.Send(command);
@@ -52,6 +57,7 @@ public class InventoryController : ControllerBase
     }
 
     [HttpGet("stock/{productId}")]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> GetStockLevel([FromRoute] Guid productId)
     {
         var query = new GetStockLevelQuery { ProductId = productId };

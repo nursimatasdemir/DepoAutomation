@@ -4,11 +4,13 @@ using Catalog.Application.Features.Products.Queries.GetProductById;
 using MediatR;
 using Catalog.Application.Features.Products.Queries.GetProducts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Catalog.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,6 +21,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> GetProducts()
     {
         var query = new GetProductsQuery();
@@ -27,6 +30,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> GetProductById(Guid id)
     {
         var query = new GetProductByIdQuery { Id = id };
@@ -38,6 +42,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
     {
         var newProductId = await _mediator.Send(command);
@@ -45,6 +50,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductCommand command)
     {
         command.Id = id;

@@ -4,13 +4,14 @@ using Catalog.Application.Features.Categories.Commands.CreateCategory;
 using Catalog.Application.Features.Categories.Commands.DeleteCategory;
 using Catalog.Application.Features.Categories.Queries.GetQueries;
 using Catalog.Application.Features.Categories.Commands.UpdateCategory;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CategoriesController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -21,6 +22,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin, Operator")]
     public async Task<IActionResult> GetCategories()
     {
         var query = new GetCategoriesQuery();
@@ -29,6 +31,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryCommand command)
     {
         var newCategoryId = await _mediator.Send(command);
@@ -36,6 +39,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, [FromBody] UpdateCategoryCommand command)
     {
         command.Id = id;
@@ -49,6 +53,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteCategory([FromRoute] Guid id, [FromBody] DeleteCategoryCommand command)
     {
         command.Id = id;
