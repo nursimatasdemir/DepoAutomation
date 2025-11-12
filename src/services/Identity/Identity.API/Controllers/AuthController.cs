@@ -1,3 +1,4 @@
+using Identity.Application.Features.Auth.Commands.Login;
 using Identity.Application.Features.Auth.Commands.Register;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,13 @@ public class AuthController : ControllerBase
         }
 
         return Ok("Kullanıcı başarıyla oluşturuldu");
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginCommand loginCommand)
+    {
+        var tokenString = await _mediator.Send(loginCommand);
+        return Ok(new { token = tokenString });
     }
     
 }
