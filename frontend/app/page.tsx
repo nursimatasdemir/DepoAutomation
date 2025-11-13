@@ -73,7 +73,9 @@ export default function Dashboard() {
           <div className="px-4 py-6 sm:px-0">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800">Ürün Listesi</h2>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+              <button 
+                  onClick={() => router.push('/products/new')}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                 + Yeni Ürün
               </button>
             </div>
