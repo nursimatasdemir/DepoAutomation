@@ -25,7 +25,8 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<Pr
                 Sku = p.Sku ?? String.Empty,
                 Name = p.Name ?? String.Empty,
                 Barcode = p.Barcode ?? String.Empty,
-                CategoryName = p.Category != null ? p.Category.Name ?? string.Empty : string.Empty
+                CategoryName = p.Category != null ? p.Category.Name ?? string.Empty : string.Empty,
+                IsActive = p.IsActive,
             })
             .ToListAsync(cancellationToken);
         return products;

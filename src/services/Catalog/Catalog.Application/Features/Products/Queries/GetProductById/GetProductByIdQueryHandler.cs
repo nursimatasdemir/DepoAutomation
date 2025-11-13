@@ -26,6 +26,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
                 Name = p.Name ?? string.Empty,
                 Barcode = p.Barcode ?? string.Empty,
                 CategoryName = p.Category != null ? p.Category.Name ?? string.Empty : string.Empty,
+                IsActive = p.IsActive,
             })
             .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
         return product;

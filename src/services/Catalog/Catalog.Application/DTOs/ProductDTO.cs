@@ -8,5 +8,7 @@ public record ProductDTO
     public string? Barcode { get; init; } = string.Empty;
     
     public string CategoryName { get; init; } = string.Empty;
+    
+    public bool IsActive { get; init; }
 
 }
