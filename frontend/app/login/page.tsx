@@ -22,15 +22,16 @@ export default function LoginPage() {
                 username: username,
                 password: password,
             });
-            
             const token = response.data.token;
-            localStorage.setItem('token', token);
             
-            alert('Giriş başarılı!');
-            router.push('/');
+            if (token) {
+                localStorage.setItem('token', token);
+                alert('Giriş başarılı!');
+                router.push('/');
+            } else {
+                console.log('giriş başarılı ama token alınamadı');
+            }
         } catch (err: any) {
-            console.error(err);
-            
             if (err.response && err.response.status === 400) {
                 setError('Kullanıcı adı veya şifre hatalı!');
             } else {
