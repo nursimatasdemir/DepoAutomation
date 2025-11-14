@@ -67,15 +67,18 @@ export default function Dashboard() {
         <nav className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
-              <div className="flex items-center">
+              <div className="flex items-center space-x-4">
                 <h1 className="text-xl font-bold text-blue-600">Depo</h1>
+                <a href="/" className="text-gray-600 hover:text-gray-900 font-medium text-sm">Ana Panel (Ürünler)</a>
+                <a href="/inventory/receive" className="text-gray-600 hover:text-gray-900 font-medium text-sm">Mal
+                  Kabul</a>
               </div>
               <div className="flex items-center">
                 <button
                     onClick={handleLogout}
                     className="text-gray-600 hover:text-red-600 font-medium"
                 >
-                  Çıkış Yap
+                Çıkış Yap
                 </button>
               </div>
             </div>
