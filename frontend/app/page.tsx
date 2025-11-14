@@ -2,16 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import productService from '../services/productService';
+import { Product } from '../types/product';
 import axiosInstance from '../utils/axiosInstance';
-
-interface Product {
-  id: string;
-  sku: string;
-  name: string;
-  barcode: string;
-  categoryName: string;
-  isActive: boolean;
-}
 
 export default function Dashboard() {
   const router = useRouter();
@@ -30,13 +23,33 @@ export default function Dashboard() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axiosInstance.get('/Products');
-      setProducts(response.data);
+      const data = await productService.getAll();
+      setProducts(data);
     } catch (err) {
       console.error('Ürünler çekilemedi:', err);
       setError('Ürün listesi yüklenirken bir hata oluştu.');
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const handleDelete = async (productId: string) => {
+    if(!window.confirm("Bu ürünü arşivlemek istediğinizden emin misiniz?"))
+    {
+      return;
+    }
+    
+    try {
+      await productService.delete(productId);
+      setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+      alert("Ürün başarıyla kaldırıldı!");
+    } catch (err:any) {
+      console.error("Ürün silinemedi: ",err);
+      
+      if(err.response && err.response.status === 403)
+      {
+        setError("Bu işlem için 'Admin' yetkisine sahip olmalısınız!");
+      }
     }
   };
   
@@ -96,6 +109,7 @@ export default function Dashboard() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Barkod</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durum</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -106,9 +120,18 @@ export default function Dashboard() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.barcode}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{product.categoryName}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      <span
+                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                         {product.isActive ? 'Aktif' : 'Pasif'}
                       </span>
+                      </td>
+                      <td className="px-6 py-4 inline-flex leading-5 text-sm font-semibold rounded-full bg-red-100 text-green-800">
+                        <button
+                            onClick={() => handleDelete(product.id)}
+                            className="text-red-600 hover:text-red-900"
+                        >
+                          🗑️
+                        </button>
                       </td>
                     </tr>
                 ))}

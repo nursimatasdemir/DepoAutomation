@@ -58,12 +58,19 @@ export default function AddProductPage() {
             router.push('/');
         } catch (err: any) {
             console.error(err);
-            if (err.response?.data?.errors) {
-                const messages = Object.values(err.response.data.errors).flat().join(', ');
-                setError(messages);
-            } else {
-                setError('ürün eklenirken hata oluştu!');
-            }
+            // if (err.response?.data?.errors) {
+            //     const messages = Object.values(err.response.data.errors).flat().join(', ');
+            //     setError(messages);
+            // } else {
+            //     setError('ürün eklenirken hata oluştu!');
+            // }
+            console.error("Ürün silinemedi: ",err);
+            if(err.response && err.response.status === 403)
+            {
+                setError("Bu işlem için 'Admin' yetkisine sahip olmalısınız!");
+            }else {
+                   setError('ürün eklenirken hata oluştu!');
+                 }
         } finally {
             setLoading(false);
         }
