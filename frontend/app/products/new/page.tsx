@@ -4,11 +4,8 @@ import { useState, useEffect } from 'react';
 import {useRouter} from 'next/navigation';
 import axiosInstance from '../../../utils/axiosInstance';
 import { CreateProductRequest } from '@/types/product';
+import { Category } from '@/types/category';
 
-interface Category {
-    id: string;
-    name: string;
-}
 
 export default function AddProductPage() {
     const router = useRouter();

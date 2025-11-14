@@ -53,6 +53,7 @@ export default function Dashboard() {
     }
   };
   
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     router.push('/login');
@@ -130,7 +131,15 @@ export default function Dashboard() {
                             onClick={() => handleDelete(product.id)}
                             className="text-red-600 hover:text-red-900"
                         >
-                          🗑️
+                          Sil
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 inline-flex leading-5 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                        <button
+                            onClick={() => router.push(`/products/${product.id}`)}
+                            className="text-black-600 hover:text-black-900"
+                        >
+                          Güncelle
                         </button>
                       </td>
                     </tr>

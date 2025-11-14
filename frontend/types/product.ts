@@ -14,3 +14,11 @@ export interface CreateProductRequest {
     barcode: string;
     categoryId: string;
 }
+
+export interface UpdateProductRequest {
+    Id: string;
+    sku: string;
+    name: string;
+    barcode: string;
+    categoryId: string;
+}
