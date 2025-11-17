@@ -8,6 +8,7 @@ const IconDashboard = () => <span>📊</span>;
 const IconProduct = () => <span>📦</span>;
 const IconReceive = () => <span>🏭</span>
 const IconTransfer = () => <span>🚚</span>;
+const IconStockOut = () => <span>🛒</span>
     
 const Sidebar = () => {
     return (
@@ -37,6 +38,11 @@ const Sidebar = () => {
                     <IconTransfer/>
                     <span className="ml-3">Transfer</span>
                 </a>
+                <a href="/inventory/pick"
+                   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                    <IconStockOut/>
+                    <span className="ml-3">Stok Çıkışı</span>
+                </a>
             </nav>
         </div>
     );
@@ -44,8 +50,8 @@ const Sidebar = () => {
 
 const Topbar = () => {
     const router = useRouter();
-    const [userName, setUserName] = useState<string | null >(null);
-    
+    const [userName, setUserName] = useState<string | null>(null);
+
     useEffect(() => {
         const userName = localStorage.getItem("userName");
         if (userName) {

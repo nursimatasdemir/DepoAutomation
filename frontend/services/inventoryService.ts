@@ -14,6 +14,13 @@ export interface TransferStockRequest {
     quantityToTransfer: number;
     sourceDocument: string;
 }
+
+export interface PickStockRequest {
+    productId: string;
+    sourceLocationId: string;
+    quantityToPick: number;
+    sourceDocument: string;
+}
 export interface StockLevelDto {
     productId: string;
     totalQuantity: number;
@@ -30,6 +37,10 @@ const inventoryService = {
     },
     getStockLevel: async (productId: string) => {
         const response = await axiosInstance.get<StockLevelDto>(`/inventory/stock/${productId}`);
+    },
+    pickStock: async (data: PickStockRequest) => {
+        const response = await axiosInstance.post(`/inventory/pick`, data);
+        return response.data;
     }
 }
 
