@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import axiosInstance from '../../../utils/axiosInstance';
+import axiosInstance from '@/utils/axiosInstance';
 import {Product, CreateProductRequest, UpdateProductRequest} from '@/types/product';
 import { Category } from '@/types/category';
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import {useRouter} from 'next/navigation';
+import {jwtDecode} from 'jwt-decode';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -25,7 +26,18 @@ export default function LoginPage() {
             const token = response.data.token;
             
             if (token) {
+                const decodedToken : any = jwtDecode(token);
+                const role = decodedToken.role;
+                const userName = decodedToken.name;
+                
                 localStorage.setItem('token', token);
+                localStorage.setItem('userRole', role);
+                localStorage.setItem('userName', userName);
+                
+                console.log("Decoded token: ", decodedToken);
+                console.log("LocalStorage'a kaydedilen rol: ", role);
+                console.log("LocalStorage'a kaydedilen kullanıcı adı: ", userName);
+                
                 alert('Giriş başarılı!');
                 router.push('/');
             } else {
