@@ -81,7 +81,7 @@ public class TransferStockCommandHandler : IRequestHandler<TransferStockCommand,
                 ProductId = request.ProductId,
                 LocationId = request.SourceLocationId,
                 QuantityChange = -request.QuantityToTransfer,
-                SourceDocument = request.Reason
+                SourceDocument = request.SourceDocument
             };
 
             var transactionIn = new StockTransaction
@@ -91,7 +91,7 @@ public class TransferStockCommandHandler : IRequestHandler<TransferStockCommand,
                 ProductId = request.ProductId,
                 LocationId = request.DestinationLocationId,
                 QuantityChange = request.QuantityToTransfer,
-                SourceDocument = request.Reason
+                SourceDocument = request.SourceDocument
             };
             
             await _context.StockTransactions.AddRangeAsync(transactionOut, transactionIn);

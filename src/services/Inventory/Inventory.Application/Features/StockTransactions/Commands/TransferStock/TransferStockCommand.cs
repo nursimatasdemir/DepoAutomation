@@ -12,7 +12,7 @@ public class TransferStockCommand : IRequest<bool>
     
     public decimal QuantityToTransfer { get; set; }
     
-    public string Reason { get; set; } = string.Empty;
+    public string SourceDocument { get; set; } = string.Empty;
     
     
 }

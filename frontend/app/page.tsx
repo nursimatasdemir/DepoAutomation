@@ -72,6 +72,8 @@ export default function Dashboard() {
                 <a href="/" className="text-gray-600 hover:text-gray-900 font-medium text-sm">Ana Panel (Ürünler)</a>
                 <a href="/inventory/receive" className="text-gray-600 hover:text-gray-900 font-medium text-sm">Mal
                   Kabul</a>
+                <a href="/inventory/transfer"
+                   className="text-gray-600 hover:text-gray-900 font-medium text-sm">Transfer</a>
               </div>
               <div className="flex items-center">
                 <button
