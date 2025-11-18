@@ -6,6 +6,8 @@ using Inventory.Application.Features.StockTransactions.Commands.PickStock;
 using Inventory.Application.Features.StockTransactions.Commands.TransferStock;
 
 using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
+using Inventory.Application.Features.StockTransactions.Queries.GetAllStockLevels;
+using Inventory.Application.Features.StockTransactions.Queries.GetProductHistory;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Inventory.API;
@@ -64,5 +66,24 @@ public class InventoryController : ControllerBase
         var stockLevel = await _mediator.Send(query);
         
         return Ok(stockLevel);
+    }
+
+    [HttpGet("stock/all")]
+    [Authorize(Roles = "Admin, Operator")]
+    public async Task<IActionResult> GetAllStockLevel()
+    {
+        var query = new GetAllStockLevelsQuery();
+        var stokLevels = await _mediator.Send(query);
+        
+        return Ok(stokLevels);
+    }
+
+    [HttpGet("history/{productId}")]
+    [Authorize(Roles = "Admin, Operator")]
+    public async Task<IActionResult> GetProductHistory([FromRoute] Guid productId)
+    {
+        var query = new GetProductHistoryQuery{ProductId = productId};
+        var history = await _mediator.Send(query);
+        return Ok(history);
     }
 }

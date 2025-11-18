@@ -44,9 +44,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return redis;
 });
 
+builder.Services.AddScoped<IInventoryDbContext, InventoryDbContext>();
+
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ReceiveStockCommand).Assembly));
 
-builder.Services.AddScoped<IInventoryDbContext, InventoryDbContext>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<InventoryDbContext>(options => options.UseNpgsql(connectionString));

@@ -14,7 +14,7 @@ const Sidebar = () => {
     return (
         <div className="w-64 bg-white shadow-md h-screen fixed top-0 left-0 pt-16">
             <div className="px-6 py-4">
-                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Navigasyon</h2>
+                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">DEPO</h2>
             </div>
             <nav className="mt-2">
                 {/* Navigasyon Linkleri */}
