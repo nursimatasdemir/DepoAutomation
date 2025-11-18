@@ -6,9 +6,10 @@ import { useState, useEffect } from 'react';
 
 const IconDashboard = () => <span>📊</span>;
 const IconProduct = () => <span>📦</span>;
-const IconReceive = () => <span>🏭</span>
+const IconReceive = () => <span>🏭</span>;
 const IconTransfer = () => <span>🚚</span>;
-const IconStockOut = () => <span>🛒</span>
+const IconStockOut = () => <span>🛒</span>;
+const IconCategory = () => <span>🗂️</span>;
     
 const Sidebar = () => {
     return (
@@ -42,6 +43,11 @@ const Sidebar = () => {
                    className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
                     <IconStockOut/>
                     <span className="ml-3">Stok Çıkışı</span>
+                </a>
+                <a href="/categories"
+                   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                    <IconCategory/>
+                    <span className="ml-3">Kategoriler</span>
                 </a>
             </nav>
         </div>

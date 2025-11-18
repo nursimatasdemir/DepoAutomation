@@ -4,6 +4,7 @@ using Catalog.Application.Features.Categories.Commands.CreateCategory;
 using Catalog.Application.Features.Categories.Commands.DeleteCategory;
 using Catalog.Application.Features.Categories.Queries.GetQueries;
 using Catalog.Application.Features.Categories.Commands.UpdateCategory;
+using Catalog.Application.Features.Categories.Queries.GetCategoriesById;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,16 @@ public class CategoriesController : ControllerBase
         return Ok(categories);
     }
 
+    [HttpGet("{id}")]
+    [Authorize(Roles = "Admin, Operator")]
+    public async Task<IActionResult> GetCategoryById([FromRoute] Guid id)
+    {
+        var query = new GetCategoryByIdQuery { Id = id };
+        var category = await _mediator.Send(query);
+        if(category == null) return NotFound();
+        return Ok(category);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryCommand command)
@@ -54,12 +65,11 @@ public class CategoriesController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteCategory([FromRoute] Guid id, [FromBody] DeleteCategoryCommand command)
+    public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
     {
-        command.Id = id;
-        
-        var wasdeleted = await _mediator.Send(command);
-        if (!wasdeleted)
+        var command = new DeleteCategoryCommand { Id = id };
+        var wasDeleted = await _mediator.Send(command);
+        if (!wasDeleted)
         {
             return NotFound();
         }
