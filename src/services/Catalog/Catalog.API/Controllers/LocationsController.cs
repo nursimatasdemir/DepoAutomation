@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Catalog.Application.Features.Locations.Commands.CreateLocation;
 using Catalog.Application.Features.Locations.Commands.DeleteLocation;
 using Catalog.Application.Features.Locations.Commands.UpdateLocation;
+using Catalog.Application.Features.Locations.Queries.GetLocationById;
 using Catalog.Application.Features.Locations.Queries.GetLocations;
 using Microsoft.AspNetCore.Authorization;
 
@@ -29,6 +30,16 @@ public class LocationsController : ControllerBase
         return Ok(locations);
     }
 
+    [HttpGet("{id}")]
+    [Authorize(Roles = "Admin, Operator")]
+    public async Task<IActionResult> GetLocationById([FromRoute] Guid id)
+    {
+        var query = new GetLocationByIdQuery { Id = id };
+        var location = await _mediator.Send(query);
+        if(location == null) return NotFound();
+        return Ok(location);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateLocation([FromBody] CreateLocationCommand command)
@@ -51,10 +62,9 @@ public class LocationsController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> DeleteLocation([FromRoute] Guid id, [FromBody] DeleteLocationCommand command)
+    public async Task<IActionResult> DeleteLocation([FromRoute] Guid id)
     {
-        command.Id = id;
-        
+        var command = new DeleteLocationCommand { Id = id };   
         var wasDeleted = await _mediator.Send(command);
         if(!wasDeleted) return NotFound();
         return NoContent();

@@ -10,6 +10,7 @@ const IconReceive = () => <span>🏭</span>;
 const IconTransfer = () => <span>🚚</span>;
 const IconStockOut = () => <span>🛒</span>;
 const IconCategory = () => <span>🗂️</span>;
+const IconLocation = () => <span>📍</span>
     
 const Sidebar = () => {
     return (
@@ -48,6 +49,11 @@ const Sidebar = () => {
                    className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
                     <IconCategory/>
                     <span className="ml-3">Kategoriler</span>
+                </a>
+                <a href="/locations"
+                   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                    <IconLocation/>
+                    <span className="ml-3">Lokasyon Bilgilerir</span>
                 </a>
             </nav>
         </div>
