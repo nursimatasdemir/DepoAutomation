@@ -2,8 +2,13 @@ import axiosInstance from "../utils/axiosInstance";
 import {Product, CreateProductRequest} from "../types/product";
 
 const productService = {
-    getAll: async () => {
-        const response = await axiosInstance.get<Product[]>('/products');
+    getAll: async (searchTerm: string = '', includeArchived: boolean = false) => {
+        const response = await axiosInstance.get<Product[]>('/products', {
+            params: {
+                searchTerm,
+                includeArchived
+            }
+        });
         return response.data;
     },
     

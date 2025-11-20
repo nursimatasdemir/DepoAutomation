@@ -23,9 +23,15 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Admin, Operator")]
-    public async Task<IActionResult> GetProducts()
+    public async Task<IActionResult> GetProducts(
+        [FromQuery] string? searchTerm, 
+        [FromQuery] bool includeArchived = false)
     {
-        var query = new GetProductsQuery();
+        var query = new GetProductsQuery
+        {
+            SearchTerm = searchTerm,
+            IncludeArchived = includeArchived
+        };
         var products = await _mediator.Send(query);
         return Ok(products);
     }

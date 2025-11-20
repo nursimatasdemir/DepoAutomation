@@ -16,19 +16,22 @@ export const AdminDashboard = () => {
     const router = useRouter();
 
     const [products, setProducts] = useState<ProductWithStock[]>([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [showArchived, setShowArchived] = useState(false);
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [showArchived]);
 
     const fetchData = async () => {
         setLoading(true);
 
         try {
             const [productsRes, stockLevelsRes] = await Promise.all([
-                productService.getAll(),
+                productService.getAll(searchTerm, showArchived),
                 inventoryService.getAllStockLevels()
             ]);
 
@@ -40,8 +43,8 @@ export const AdminDashboard = () => {
                 ...product,
                 quantity: stockMap.get(product.id) ?? 0
             }));
-
             setProducts(combinedData);
+            
         } catch (err:any) {
             console.error('Veri çekilemedi', err);
             setError("Ürün veya stok listesi yüklenirken bir hata oluştu.");
@@ -99,6 +102,38 @@ export const AdminDashboard = () => {
                         + Yeni Ürün
                     </button>
                 </div>
+                <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-col sm:flex-row gap-4 items-center">
+                    
+                    <div className="flex-1 w-full">
+                        <input
+                            type="text"
+                            placeholder="Ürün adı veya SKU ara..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && fetchData()} 
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                    </div>
+
+                    {/* Ara Butonu */}
+                    <button
+                        onClick={fetchData}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 font-medium"
+                    >
+                        Ara 🔍
+                    </button>
+
+                    <label className="flex items-center space-x-2 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            checked={showArchived}
+                            onChange={(e) => setShowArchived(e.target.checked)}
+                            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        />
+                        <span className="text-gray-700 font-medium">Arşivlenenleri Göster</span>
+                    </label>
+
+                </div>
 
                 {error && (
                     <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
@@ -112,9 +147,13 @@ export const AdminDashboard = () => {
                         <thead className="bg-gray-50">
                         <tr>
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">SKU</th>
-                            <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Ürün Adı</th>
+                            <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Ürün
+                                Adı
+                            </th>
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                            <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Mevcut Stok</th>
+                            <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Mevcut
+                                Stok
+                            </th>
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Durum</th>
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                         </tr>
@@ -145,7 +184,7 @@ export const AdminDashboard = () => {
                                         onClick={() => handleDelete(product.id)}
                                         className="px-6 py-4 inline-flex text-lg leading-5 font-semibold rounded-full bg-red-100 text-red-700 hover:bg-red-100 mr-4"
                                     >
-                                       🗑️
+                                        🗑️
                                     </button>
                                 </td>
                             </tr>

@@ -16,20 +16,38 @@ public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, List<Pr
 
     public async Task<List<ProductDTO>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await _context.Products
+        var query = _context.Products
             .Include(p => p.Category)
-            .Where(p=>p.IsActive == true)
+            .AsQueryable();
+
+        if (!request.IncludeArchived)
+        {
+            query = query.Where(p => p.IsActive);
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var term = request.SearchTerm.ToLower();
+            query = query.Where(p=>
+                p.Name.ToLower().Contains(term) || 
+                p.Sku.ToLower().Contains(term) ||
+                (p.Barcode != null && p.Barcode.Contains(term)));
+        }
+        
+        var products = await query
+            .OrderBy(p => p.Name)
             .Select(p => new ProductDTO
             {
                 Id = p.Id,
-                Sku = p.Sku ?? String.Empty,
-                Name = p.Name ?? String.Empty,
-                Barcode = p.Barcode ?? String.Empty,
-                CategoryName = p.Category != null ? p.Category.Name ?? string.Empty : string.Empty,
+                Sku = p.Sku ?? string.Empty,
+                Name = p.Name ?? string.Empty,
+                Barcode = p.Barcode ?? string.Empty,
+                CategoryName = p.Category != null ? p.Category.Name ??  string.Empty : string.Empty,
                 IsActive = p.IsActive,
             })
             .ToListAsync(cancellationToken);
         return products;
     }
     
+
 }
