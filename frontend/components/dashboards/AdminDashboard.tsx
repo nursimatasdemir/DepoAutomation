@@ -8,6 +8,13 @@ import inventoryService from '@/services/inventoryService';
 import { Product } from '@/types/product';
 import { useRouter } from 'next/navigation';
 
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+
+import dashboardService from '@/services/dashboardService';
+import {CatalogStats, InventoryStats} from '@/types/dashboard';
+
 interface ProductWithStock extends Product {
     quantity: number; 
 }
@@ -18,12 +25,16 @@ export const AdminDashboard = () => {
     const [products, setProducts] = useState<ProductWithStock[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [showArchived, setShowArchived] = useState(false);
+
+    const [catalogStats, setCatalogStats] = useState<CatalogStats | null>(null);
+    const [inventoryStats, setInventoryStats] = useState<InventoryStats | null>(null);
     
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
     useEffect(() => {
         fetchData();
+        fetchStats();
     }, [showArchived]);
 
     const fetchData = async () => {
@@ -53,6 +64,25 @@ export const AdminDashboard = () => {
         }
     }
 
+    const fetchStats = async () => {
+        try {
+            const [catStats, invStats] = await Promise.all([
+                dashboardService.getCatalogStats(),
+                dashboardService.getInventoryStats()
+            ]);
+            setCatalogStats(catStats);
+            setInventoryStats(invStats);
+        } catch (err) {
+            console.error("İstatistikler yüklenemedi", err);
+        }
+    };
+
+    const chartData = [
+        { name: 'Giriş', miktar: inventoryStats?.incomingTransactions || 0 },
+        { name: 'Çıkış', miktar: inventoryStats?.outgoingTransactions || 0 },
+        { name: 'Toplam İşlem', miktar: inventoryStats?.totalTransactions || 0 },
+    ];
+
     const handleDelete = async (productId: string) => {
         if(!window.confirm("Bu ürünü arşivlemek istediğinizden emin misiniz?"))
         {
@@ -78,6 +108,57 @@ export const AdminDashboard = () => {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">
                 Admin Paneli
             </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+                <div className="bg-white p-6 rounded-lg shadow border-l-4 border-indigo-500">
+                    <h3 className="text-sm font-medium text-gray-500">Toplam Ürün</h3>
+                    <p className="mt-2 text-3xl font-bold text-gray-900">
+                        {catalogStats?.productCount ?? '-'}
+                    </p>
+                    <span className="text-xs text-green-600">
+            {catalogStats?.activeProductCount} Aktif
+          </span>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
+                    <h3 className="text-sm font-medium text-gray-500">Toplam Stok Adedi</h3>
+                    <p className="mt-2 text-3xl font-bold text-gray-900">
+                        {inventoryStats?.totalItemsInStock ?? '-'}
+                    </p>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow border-l-4 border-yellow-500">
+                    <h3 className="text-sm font-medium text-gray-500">Kategoriler</h3>
+                    <p className="mt-2 text-3xl font-bold text-gray-900">
+                        {catalogStats?.categoryCount ?? '-'}
+                    </p>
+                </div>
+
+                <div className="bg-white p-6 rounded-lg shadow border-l-4 border-red-500">
+                    <h3 className="text-sm font-medium text-gray-500">Lokasyonlar</h3>
+                    <p className="mt-2 text-3xl font-bold text-gray-900">
+                        {catalogStats?.locationCount ?? '-'}
+                    </p>
+                </div>
+
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow mb-8">
+                <h3 className="text-lg font-bold text-gray-800 mb-4">Depo Hareket Özeti</h3>
+                <div className="h-64 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={chartData}>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="name"/>
+                            <YAxis/>
+                            <Tooltip/>
+                            <Legend/>
+                            <Bar dataKey="miktar" fill="#4F46E5" name="İşlem Sayısı"/>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow">
                     <h3 className="text-sm font-medium text-gray-500">Toplam Ürün Çeşidi</h3>
@@ -87,10 +168,6 @@ export const AdminDashboard = () => {
                     <h3 className="text-sm font-medium text-gray-500">Kritik Stok Seviyesi</h3>
                     <p className="mt-2 text-3xl font-semibold text-red-600">5 Ürün</p>
                 </div>
-            </div>
-            <div className="mt-8 bg-white p-6 rounded-lg shadow">
-                <h3 className="text-lg font-medium text-gray-900">Aylık Satış Grafiği</h3>
-                <p className="mt-4 text-gray-500">[Grafik buraya gelecek]</p>
             </div>
             <div className="px-4 py-6 sm:px-0">
                 <div className="flex justify-between items-center mb-6">
@@ -103,14 +180,14 @@ export const AdminDashboard = () => {
                     </button>
                 </div>
                 <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-col sm:flex-row gap-4 items-center">
-                    
+
                     <div className="flex-1 w-full">
                         <input
                             type="text"
                             placeholder="Ürün adı veya SKU ara..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && fetchData()} 
+                            onKeyDown={(e) => e.key === 'Enter' && fetchData()}
                             className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-800 focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>

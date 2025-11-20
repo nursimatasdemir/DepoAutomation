@@ -46,6 +46,7 @@ export const OperatorDashboard = () => {
                     </tbody>
                 </table>
             </div>
+            
         </div>
     );
 }

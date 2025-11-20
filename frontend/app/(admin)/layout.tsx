@@ -25,11 +25,11 @@ const Sidebar = () => {
                     <IconDashboard/>
                     <span className="ml-3">Ana Panel</span>
                 </a>
-                <a href="/products/new"
-                   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
-                    <IconProduct/>
-                    <span className="ml-3">Ürün Ekle</span>
-                </a>
+                {/*<a href="/products/new"*/}
+                {/*   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">*/}
+                {/*    <IconProduct/>*/}
+                {/*    <span className="ml-3">Ürün Ekle</span>*/}
+                {/*</a>*/}
                 <a href="/inventory/receive"
                    className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
                     <IconReceive/>
