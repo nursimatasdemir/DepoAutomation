@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Catalog.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/catalog/[controller]")]
 [Authorize]
 public class DashboardController : ControllerBase
 {

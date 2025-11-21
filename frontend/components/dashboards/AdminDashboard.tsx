@@ -82,6 +82,7 @@ export const AdminDashboard = () => {
         { name: 'Çıkış', miktar: inventoryStats?.outgoingTransactions || 0 },
         { name: 'Toplam İşlem', miktar: inventoryStats?.totalTransactions || 0 },
     ];
+    
 
     const handleDelete = async (productId: string) => {
         if(!window.confirm("Bu ürünü arşivlemek istediğinizden emin misiniz?"))
@@ -148,7 +149,7 @@ export const AdminDashboard = () => {
                 <div className="h-64 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={chartData}>
-                            <CartesianGrid strokeDasharray="3 3"/>
+                        <CartesianGrid strokeDasharray="3 3"/>
                             <XAxis dataKey="name"/>
                             <YAxis/>
                             <Tooltip/>
@@ -156,17 +157,6 @@ export const AdminDashboard = () => {
                             <Bar dataKey="miktar" fill="#4F46E5" name="İşlem Sayısı"/>
                         </BarChart>
                     </ResponsiveContainer>
-                </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow">
-                    <h3 className="text-sm font-medium text-gray-500">Toplam Ürün Çeşidi</h3>
-                    <p className="mt-2 text-3xl font-semibold text-gray-900">124</p>
-                </div>
-                <div className="bg-white p-6 rounded-lg shadow">
-                    <h3 className="text-sm font-medium text-gray-500">Kritik Stok Seviyesi</h3>
-                    <p className="mt-2 text-3xl font-semibold text-red-600">5 Ürün</p>
                 </div>
             </div>
             <div className="px-4 py-6 sm:px-0">
