@@ -211,7 +211,7 @@ export const AdminDashboard = () => {
                 {/* Tablo */}
                 <div className="bg-white shadow overflow-hidden sm:rounded-lg">
                     <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
+                        <thead className="bg-gray-50 ">
                         <tr>
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">SKU</th>
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Ürün
@@ -221,8 +221,11 @@ export const AdminDashboard = () => {
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Mevcut
                                 Stok
                             </th>
+                            {/*<th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Mevcut*/}
+                            {/*    Stok Konumu*/}
+                            {/*</th>*/}
                             <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">Durum</th>
-                            <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
+                            <th className="px-6 py-3 text-left text-base font-medium text-gray-500 uppercase tracking-wider mr-10">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -232,6 +235,7 @@ export const AdminDashboard = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-base  text-stone-800">{product.name}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-base  text-stone-800">{product.categoryName}</td>
                                 <td className="px-6 py-4 whitespace-nowrap text-base  text-stone-800">{product.quantity}</td>
+                                {/*<td className="px-6 py-4 whitespace-nowrap text-base  text-stone-800">{product.}</td>*/}
                                 <td className="px-6 py-4 whitespace-nowrap text-base  text-stone-800">
                   <span
                       className={`px-6 py-4 inline-flex leading-5 whitespace-nowrap text-xl font-semibold rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Job\Job.Infrastructure\Job.Infrastructure.csproj" />
     <ProjectReference Include="..\Inventory.Application\Inventory.Application.csproj" />
     <ProjectReference Include="..\Inventory.Infrastructure\Inventory.Infrastructure.csproj" />
   </ItemGroup>

@@ -21,6 +21,7 @@ public class GetInventoryStatsQueryHandler : IRequestHandler<GetInventoryStatsQu
         var outgoing = await _context.StockTransactions.CountAsync(t => t.QuantityChange < 0 ,cancellationToken);
         
         var totalStock = await _context.StockTransactions.SumAsync(t => t.QuantityChange,cancellationToken);
+
         
         return new InventoryStatsDTO
         {

@@ -7,6 +7,7 @@ using Inventory.Application.Abstraction;
 using Inventory.Application.Features.StockTransactions.Commands.ReceiveStock;
 using StackExchange.Redis;
 using Inventory.API.Services;
+using Job.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
