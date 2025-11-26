@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import {useRouter} from 'next/navigation';
+import {useState, useEffect} from 'react';
 
 const IconDashboard = () => <span>📊</span>;
 const IconProduct = () => <span>📦</span>;
@@ -10,9 +10,20 @@ const IconReceive = () => <span>🏭</span>;
 const IconTransfer = () => <span>🚚</span>;
 const IconStockOut = () => <span>🛒</span>;
 const IconCategory = () => <span>🗂️</span>;
-const IconLocation = () => <span>📍</span>
-    
+const IconLocation = () => <span>📍</span>;
+const IconJob = () => <span>📋</span>
+
 const Sidebar = () => {
+    
+    const [userRole, setUserRole] = useState<string | null>(null);
+    
+    useEffect(() => {
+        if(typeof window !== 'undefined') {
+            const role = localStorage.getItem('userRole');
+            setUserRole(role);
+        }
+    }, [])
+    
     return (
         <div className="w-64 bg-white shadow-md h-screen fixed top-0 left-0 pt-16">
             <div className="px-6 py-4">
@@ -30,6 +41,33 @@ const Sidebar = () => {
                 {/*    <IconProduct/>*/}
                 {/*    <span className="ml-3">Ürün Ekle</span>*/}
                 {/*</a>*/}
+
+                {userRole === 'Admin' && (
+                    <>
+                        <a href="/jobs/new"
+                           className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                            <IconJob/>
+                            <span className="ml-3">İş Oluştur</span>
+                        </a>
+
+                        <a href="/categories"
+                           className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                            <IconCategory/>
+                            <span className="ml-3">Kategoriler</span>
+                        </a>
+
+                        <a href="/locations"
+                           className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
+                            <IconLocation/>
+                            <span className="ml-3">Lokasyon Bilgileri</span>
+                        </a>
+                    </>
+                )}
+
+                <div className="px-6 py-2 mt-4">
+                    <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Operasyon</h2>
+                </div>
+
                 <a href="/inventory/receive"
                    className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
                     <IconReceive/>
@@ -44,16 +82,6 @@ const Sidebar = () => {
                    className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
                     <IconStockOut/>
                     <span className="ml-3">Stok Çıkışı</span>
-                </a>
-                <a href="/categories"
-                   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
-                    <IconCategory/>
-                    <span className="ml-3">Kategoriler</span>
-                </a>
-                <a href="/locations"
-                   className="flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100">
-                    <IconLocation/>
-                    <span className="ml-3">Lokasyon Bilgilerir</span>
                 </a>
             </nav>
         </div>
@@ -70,7 +98,7 @@ const Topbar = () => {
             setUserName(userName);
         }
     }, []);
-    
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('userRole');
@@ -94,27 +122,27 @@ const Topbar = () => {
 };
 
 export default function AdminLayout({
-    children,
-}: {
-    children:React.ReactNode;
+                                        children,
+                                    }: {
+    children: React.ReactNode;
 }) {
     const router = useRouter();
-    
+
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if(!token){
+        if (!token) {
             router.push('/login');
         }
     }, [router]);
 
     return (
         <div className="flex min-h-screen bg-gray-100">
-            <Sidebar />
-            <div className="flex-1 flex flex-col ml-64"> 
-                <Topbar />
+            <Sidebar/>
+            <div className="flex-1 flex flex-col ml-64">
+                <Topbar/>
 
-                <main className="flex-1 p-6 pt-22"> 
-                    {children} 
+                <main className="flex-1 p-6 pt-22">
+                    {children}
                 </main>
             </div>
         </div>

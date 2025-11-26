@@ -35,11 +35,17 @@ export const AdminDashboard = () => {
     useEffect(() => {
         fetchData();
         fetchStats();
+        
+        // const intervalId = setInterval(() => {
+        //     console.log("♻️ Veriler güncelleniyor...");
+        //     fetchData();
+        //     fetchStats();
+        // }, 5000);
+        // return () => clearInterval(intervalId);
+        
     }, [showArchived]);
 
     const fetchData = async () => {
-        setLoading(true);
-
         try {
             const [productsRes, stockLevelsRes] = await Promise.all([
                 productService.getAll(searchTerm, showArchived),
@@ -103,6 +109,8 @@ export const AdminDashboard = () => {
             }
         }
     };
+    
+    if(loading) return <div className="p-10 text-center">Paneller Yükleniyor...</div>
     
     return (
         <div>
