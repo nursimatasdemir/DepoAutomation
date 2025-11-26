@@ -1,4 +1,4 @@
-DepoAutomation - Mikroservis Tabanlı Depo Yönetim Sistemi 
+## DepoAutomation - Mikroservis Tabanlı Depo Yönetim Sistemi 
 
 Bu proje, üniversitede edindiğim teorik bilgileri pratiğe dökmek ve yetkinliğimi artırmak amacıyla geliştirdiğim kapsamlı bir Full-Stack projesidir.
 
@@ -39,3 +39,11 @@ Sistem, her biri kendi `DbContext`'ine ve sorumluluğuna sahip 4 ana mikroservis
 **Operasyon:** Mal kabul, transfer ve stok toplama süreçleri.
 
 **Güvenlik:** Rol tabanlı yetkilendirme (Sadece Adminler ürün silebilir, Operatörler iş emri tamamlayabilir ama oluşturamazlar).
+
+**Admin Paneli Görünümü**
+<img width="1280" height="710" alt="image" src="https://github.com/user-attachments/assets/eaf057a3-ea8a-4a93-99dc-f95234d77823" />
+
+**Operatör Paneli Görünümü**
+<img width="1280" height="301" alt="image" src="https://github.com/user-attachments/assets/830c91c9-1b17-43b5-bdee-1b60cb95c6e2" />
+
+
