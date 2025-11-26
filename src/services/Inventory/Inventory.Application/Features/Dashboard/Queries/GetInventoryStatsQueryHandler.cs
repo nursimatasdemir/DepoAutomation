@@ -26,7 +26,7 @@ public class GetInventoryStatsQueryHandler : IRequestHandler<GetInventoryStatsQu
         return new InventoryStatsDTO
         {
             TotalTransactions = totalTx,
-            IncomiingTransactions = incoming,
+            IncomingTransactions = incoming,
             OutgoingTransactions = outgoing,
             TotalItemsInStock = totalStock
         };
