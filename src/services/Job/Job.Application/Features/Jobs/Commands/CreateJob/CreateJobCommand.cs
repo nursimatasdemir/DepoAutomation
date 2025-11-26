@@ -9,6 +9,6 @@ public class CreateJobCommand : IRequest<Guid>
 {
     public JobType Type { get; set; }
     public string? SourceDocument { get; set; }
-    public List<JobItemDTO>? Items { get; set; } = new();
+    public List<CreateJobItemDTO>? Items { get; set; } = new();
     
 }
