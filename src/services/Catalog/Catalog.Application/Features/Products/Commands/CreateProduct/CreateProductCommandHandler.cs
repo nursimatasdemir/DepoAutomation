@@ -24,33 +24,7 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
 
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var categoryExist = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId, cancellationToken);
-        if (!categoryExist)
-        {
-            throw new ValidationException(new[]
-            {
-                new ValidationFailure("Category", $"Verilen {request.CategoryId} ile kayıtlı Kategori ID numarası bulunamadı")
-            });
-        }
         
-        var skuExists = await _context.Products.AnyAsync(c=> c.Sku == request.Sku, cancellationToken);
-        if (skuExists)
-        {
-            throw new FluentValidation.ValidationException(new[]
-            {
-                new ValidationFailure("SKU",$"Stok kodu {request.Sku} zaten başka bir ürün tarafından kullanılıyor")
-            });
-
-        }
-        var barcodeExists = await _context.Products.AnyAsync(c=> c.Barcode == request.Barcode, cancellationToken);
-        if (barcodeExists)
-        {
-            throw new FluentValidation.ValidationException(new[]
-            {
-                new ValidationFailure("Barcode", $"Barkod Numarası : {request.Barcode} başka bir ürünü temsil etmektedir")
-            });
-
-        }
         var newProduct = new Product
         {
             Id = Guid.NewGuid(),
