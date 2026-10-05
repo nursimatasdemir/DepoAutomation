@@ -18,11 +18,12 @@ RabbitMQ `docker-compose.yml` içinde tanımlıdır; servis kodunda şu an kulla
 ## Mimari Yapı
 
 Sistem, her biri kendi `DbContext`'ine ve sorumluluğuna sahip 4 ana mikroservis ve bir ağ geçidinden (APIGateway) oluşur:
-| **ApiGateway** | Tüm dış istekleri karşılar, yükü dağıtır ve ilgili servise yönlendirir. ( YARP )
-| **Identity** | Kullanıcı kaydı, girişi (Admin/Operator) ve JWT token üretimi. (ASP.NET Identity)
-| **Catalog** | Ürün, kategori ve lokasyon tanımlamaları. ( EF Core, Postgres )
-| **Inventory** | Stok giriş/çıkış hareketleri ve Redis ile hızlı stok sorgulama. ( Redis, CQRS )
-| **Job** | Depo operasyonları (Toplama, Yerleştirme) için iş emirleri oluşturma.
+|---|---|
+| **ApiGateway** | Tüm dış istekleri karşılar, yükü dağıtır ve ilgili servise yönlendirir. ( YARP ) | 
+| **Identity** | Kullanıcı kaydı, girişi (Admin/Operator) ve JWT token üretimi. (ASP.NET Identity) |
+| **Catalog** | Ürün, kategori ve lokasyon tanımlamaları. ( EF Core, Postgres ) |
+| **Inventory** | Stok giriş/çıkış hareketleri ve Redis ile hızlı stok sorgulama. ( Redis, CQRS ) |
+| **Job** | Depo operasyonları (Toplama, Yerleştirme) için iş emirleri oluşturma. |
 
 **Admin Paneli:** Ürün ekleme, kategori yönetimi, lokasyon tanımlama ve dashboard raporları.
 
